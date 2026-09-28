@@ -34,6 +34,7 @@
         </a>
         <nav class="site-nav" aria-label="Navegação principal">
             <a href="#funcionalidades">Funcionalidades</a>
+            <a href="#demonstracao">Vídeo</a>
             <a href="#galeria">Prints</a>
             <a href="#instalacao">Instalação</a>
             <a href="#stack">Stack</a>
@@ -57,6 +58,15 @@
                 curso, com barra de progresso em cada card, cor e logo
                 configuráveis pelo admin, e um seletor de tema
                 claro/escuro/sistema acessível em todo o site.
+            </p>
+            <p class="hero-disclaimer">
+                <strong>Esta página é uma apresentação estática</strong> — o
+                <strong>Painel por Categoria</strong> em si é um tema para
+                <a href="https://moodle.org/">Moodle</a> (uma plataforma
+                servida em PHP), instalado em um site Moodle existente a
+                partir do <code>.zip</code> da release, ou executado
+                localmente via Docker para desenvolvimento. Nada aqui roda
+                Moodle no seu navegador.
             </p>
             <div class="hero-actions">
                 <a class="btn btn-primary" href="https://github.com/shongasbarbosa/projeto-04-tema-moodle-categorias/releases/latest">Baixar o pacote (.zip)</a>
@@ -97,6 +107,43 @@
                     <p>Playwright + axe-core checam contraste e blocos claros no modo escuro em dezenas de páginas antes de cada release.</p>
                 </article>
             </div>
+        </div>
+    </section>
+
+    <section id="demonstracao" class="section">
+        <div class="wrap">
+            <h2>Demonstração em vídeo</h2>
+            <p class="section-intro">
+                Cerca de 30 segundos, sempre no modo claro: login como aluno,
+                o painel por categoria, a abertura de um curso, a troca da
+                cor de uma categoria pelo admin e o resultado aplicado de
+                volta no painel do aluno.
+            </p>
+            <video
+                class="demo-video"
+                controls
+                preload="metadata"
+                poster="assets/screenshots/painel-categoria-claro.png"
+                width="1280"
+                height="720"
+                aria-describedby="demo-video-desc"
+            >
+                <source src="assets/video/demo.mp4" type="video/mp4">
+                <source src="assets/video/demo.webm" type="video/webm">
+                Seu navegador não suporta vídeo HTML5.
+                <a href="assets/video/demo.mp4">Baixe o vídeo</a>.
+            </video>
+            <p id="demo-video-desc" class="section-note">
+                Descrição para acessibilidade: o vídeo, sem áudio, mostra em
+                sequência (1) o login do aluno demo; (2) o painel "Meus
+                cursos por categoria" com rolagem pelos grupos de categorias;
+                (3) a abertura de um curso a partir de um card e o retorno ao
+                painel; (4) o admin abrindo as configurações do tema e
+                trocando a cor da categoria "Programação"; (5) o painel do
+                aluno mostrando a nova cor aplicada aos cards dessa
+                categoria. A cor foi restaurada ao valor original logo após
+                a gravação.
+            </p>
         </div>
     </section>
 

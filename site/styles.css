@@ -109,12 +109,12 @@ a {
     color: var(--primary);
 }
 
-:root[data-theme="dark"] a {
+:root[data-theme="dark"] a:not(.btn) {
     color: #7fa2ff;
 }
 
 @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) a {
+    :root:not([data-theme="light"]) a:not(.btn) {
         color: #7fa2ff;
     }
 }
@@ -255,6 +255,20 @@ code {
     margin-bottom: 0.5rem;
 }
 
+/* var(--primary) is the same #1E4FD8 in both modes (only surface/text
+   tokens are redefined for dark) — too dark for small uppercase text
+   against the dark background, so give .eyebrow its own dark-mode color,
+   matching the lightened blue already used for links in dark mode. */
+:root[data-theme="dark"] .eyebrow {
+    color: #7fa2ff;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .eyebrow {
+        color: #7fa2ff;
+    }
+}
+
 .lede {
     color: var(--text-muted);
     font-size: 1.1rem;
@@ -296,6 +310,33 @@ code {
 .btn-outline:hover {
     border-color: var(--primary);
     color: var(--primary);
+}
+
+.hero-disclaimer {
+    max-width: 640px;
+    margin: 1rem auto 0;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem 1rem;
+}
+
+.hero-disclaimer code {
+    background: var(--bg);
+}
+
+.demo-video {
+    display: block;
+    width: 100%;
+    max-width: 1000px;
+    height: auto;
+    margin: 1.5rem auto 0;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border);
+    background: #000;
 }
 
 .hero-shot {

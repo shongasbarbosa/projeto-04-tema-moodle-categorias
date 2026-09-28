@@ -32,6 +32,11 @@ núcleo do Moodle.
 
 ## Prints
 
+Vídeo curto (~30s, modo claro) mostrando o login, o painel por categoria, a
+abertura de um curso e a troca de cor de uma categoria pelo admin:
+[demo.gif](docs/video/demo.gif) · também em vídeo (MP4/WebM, com controles)
+na [página de apresentação](https://shongasbarbosa.github.io/projeto-04-tema-moodle-categorias/#demonstracao).
+
 | Login (claro) | Login (escuro) |
 | --- | --- |
 | ![Tela de login, modo claro](docs/screenshots/login-claro.png) | ![Tela de login, modo escuro](docs/screenshots/login-escuro.png) |
