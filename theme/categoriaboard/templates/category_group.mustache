@@ -1,0 +1,74 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template theme_categoriaboard/category_group
+
+    One category header plus its course cards.
+
+    Context variables required for this template:
+    * categoryid - int
+    * categoryname - string
+    * color - string, '#rrggbb'
+    * hascourses - bool
+    * coursecount - int
+    * courses - array of exported course_card
+
+    Example context (json):
+    {
+        "categoryid": 2,
+        "categoryname": "Programação",
+        "color": "#1E4FD8",
+        "hascourses": true,
+        "coursecount": 1,
+        "courses": [
+            {
+                "id": 10,
+                "fullname": "PHP para EaD",
+                "url": "#",
+                "imageurl": "#",
+                "hasprogress": true,
+                "progress": 42,
+                "progresslabel": "42%"
+            }
+        ]
+    }
+}}
+<div class="categoriaboard-category" style="--categoriaboard-category-color: {{color}};">
+    <h3 class="categoriaboard-category__title">
+        <span class="categoriaboard-category__swatch" aria-hidden="true"></span>
+        {{categoryname}}
+        <span class="categoriaboard-category__count">
+            {{#str}} coursecount, theme_categoriaboard, {{coursecount}} {{/str}}
+        </span>
+    </h3>
+
+    {{^hascourses}}
+        <p class="categoriaboard-empty categoriaboard-empty--category">
+            {{#str}} emptystate_nocoursesincategory, theme_categoriaboard {{/str}}
+        </p>
+    {{/hascourses}}
+
+    {{#hascourses}}
+        <ul class="categoriaboard-cards" role="list">
+            {{#courses}}
+                <li class="categoriaboard-cards__item">
+                    {{> theme_categoriaboard/course_card }}
+                </li>
+            {{/courses}}
+        </ul>
+    {{/hascourses}}
+</div>
