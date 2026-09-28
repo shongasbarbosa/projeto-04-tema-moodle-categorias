@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel por Categoria — tema para Moodle</title>
+<meta name="description" content="Tema filho do Boost para Moodle 4.5 que agrupa os cursos matriculados do aluno por categoria, com progresso, identidade visual configurável e modo escuro.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22><rect width=%2224%22 height=%2224%22 rx=%226%22 fill=%22%231E4FD8%22/><rect x=%225%22 y=%225%22 width=%226%22 height=%226%22 rx=%221.5%22 fill=%22white%22/><rect x=%2213%22 y=%225%22 width=%226%22 height=%226%22 rx=%221.5%22 fill=%22white%22 fill-opacity=%22.6%22/><rect x=%225%22 y=%2213%22 width=%226%22 height=%226%22 rx=%221.5%22 fill=%22white%22 fill-opacity=%22.6%22/><rect x=%2213%22 y=%2213%22 width=%226%22 height=%226%22 rx=%221.5%22 fill=%22white%22 fill-opacity=%22.35%22/></svg>">
+<script>
+(function() {
+    try {
+        var stored = localStorage.getItem('categoriaboard-site-theme');
+        var mode = (stored === 'light' || stored === 'dark') ? stored : 'system';
+        var resolved = mode === 'system'
+            ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+            : mode;
+        document.documentElement.setAttribute('data-theme', resolved);
+    } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+    }
+})();
+</script>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+<header class="site-header">
+    <div class="wrap header-inner">
+        <a class="brand" href="#topo">
+            <span class="brand-mark" aria-hidden="true"></span>
+            Painel por Categoria
+        </a>
+        <nav class="site-nav" aria-label="Navegação principal">
+            <a href="#funcionalidades">Funcionalidades</a>
+            <a href="#galeria">Prints</a>
+            <a href="#instalacao">Instalação</a>
+            <a href="#stack">Stack</a>
+        </nav>
+        <div class="themeswitcher" role="group" aria-label="Selecionar tema">
+            <button type="button" class="themeswitcher__button" data-mode="system" aria-pressed="false">Sistema</button>
+            <button type="button" class="themeswitcher__button" data-mode="light" aria-pressed="false">Claro</button>
+            <button type="button" class="themeswitcher__button" data-mode="dark" aria-pressed="false">Escuro</button>
+        </div>
+    </div>
+</header>
+
+<main id="conteudo">
+
+    <section id="topo" class="hero">
+        <div class="wrap hero-inner">
+            <p class="eyebrow">Tema filho do Boost · Moodle 4.5 LTS</p>
+            <h1>Cursos matriculados, organizados por categoria — com progresso e identidade visual próprios.</h1>
+            <p class="lede">
+                Um tema de Moodle que agrupa o painel do aluno por categoria de
+                curso, com barra de progresso em cada card, cor e logo
+                configuráveis pelo admin, e um seletor de tema
+                claro/escuro/sistema acessível em todo o site.
+            </p>
+            <div class="hero-actions">
+                <a class="btn btn-primary" href="https://github.com/shongasbarbosa/projeto-04-tema-moodle-categorias/releases/latest">Baixar o pacote (.zip)</a>
+                <a class="btn btn-outline" href="https://github.com/shongasbarbosa/projeto-04-tema-moodle-categorias">Ver repositório</a>
+            </div>
+        </div>
+        <div class="hero-shot">
+            <img src="assets/screenshots/painel-categoria-claro.png" data-shot-light="assets/screenshots/painel-categoria-claro.png" data-shot-dark="assets/screenshots/painel-categoria-escuro.png" alt="Painel por categoria mostrando cursos agrupados por categoria, cada um com barra de progresso" width="1280" height="800" loading="eager">
+        </div>
+    </section>
+
+    <section id="funcionalidades" class="section">
+        <div class="wrap">
+            <h2>Funcionalidades</h2>
+            <div class="grid grid-3">
+                <article class="card">
+                    <h3>Painel por categoria</h3>
+                    <p>Agrupa os cursos matriculados do aluno por categoria, com barra de progresso e percentual em cada card.</p>
+                </article>
+                <article class="card">
+                    <h3>Identidade configurável</h3>
+                    <p>Cor primária, logo e uma cor por categoria, tudo pelo painel de administração do Moodle — sem editar código.</p>
+                </article>
+                <article class="card">
+                    <h3>Claro / escuro / sistema</h3>
+                    <p>Seletor de tema no cabeçalho, com persistência entre sessões e sem flash do tema errado ao recarregar.</p>
+                </article>
+                <article class="card">
+                    <h3>Acessível (WCAG AA)</h3>
+                    <p>Barras de progresso com <code>aria-*</code>, foco visível, contraste de cor verificado em ambos os modos.</p>
+                </article>
+                <article class="card">
+                    <h3>Responsivo</h3>
+                    <p>Grade de cursos em coluna única em telas estreitas; seletor de tema colapsado em um único botão abaixo de 768px.</p>
+                </article>
+                <article class="card">
+                    <h3>Verificação visual automatizada</h3>
+                    <p>Playwright + axe-core checam contraste e blocos claros no modo escuro em dezenas de páginas antes de cada release.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section id="galeria" class="section section-alt">
+        <div class="wrap">
+            <h2>Prints</h2>
+            <p class="section-intro">O tema no modo claro e escuro, em desktop e em tela estreita (360px).</p>
+
+            <div class="gallery-grid">
+                <figure class="gallery-item">
+                    <img src="assets/screenshots/login-claro.png" data-shot-light="assets/screenshots/login-claro.png" data-shot-dark="assets/screenshots/login-escuro.png" alt="Tela de login do Moodle com a identidade do tema" loading="lazy">
+                    <figcaption>Login</figcaption>
+                </figure>
+                <figure class="gallery-item">
+                    <img src="assets/screenshots/painel-categoria-claro.png" data-shot-light="assets/screenshots/painel-categoria-claro.png" data-shot-dark="assets/screenshots/painel-categoria-escuro.png" alt="Painel de cursos agrupados por categoria" loading="lazy">
+                    <figcaption>Painel por categoria</figcaption>
+                </figure>
+                <figure class="gallery-item">
+                    <img src="assets/screenshots/curso-claro.png" data-shot-light="assets/screenshots/curso-claro.png" data-shot-dark="assets/screenshots/curso-escuro.png" alt="Página de um curso, com abas de participantes e notas" loading="lazy">
+                    <figcaption>Página do curso</figcaption>
+                </figure>
+                <figure class="gallery-item">
+                    <img src="assets/screenshots/modo-edicao-claro.png" data-shot-light="assets/screenshots/modo-edicao-claro.png" data-shot-dark="assets/screenshots/modo-edicao-escuro.png" alt="Curso em modo de edição, com atividades e controles de conclusão" loading="lazy">
+                    <figcaption>Modo de edição</figcaption>
+                </figure>
+                <figure class="gallery-item">
+                    <img src="assets/screenshots/admin-config-tema-claro.png" data-shot-light="assets/screenshots/admin-config-tema-claro.png" data-shot-dark="assets/screenshots/admin-config-tema-escuro.png" alt="Tela de configurações do tema no painel de administração" loading="lazy">
+                    <figcaption>Configurações do tema</figcaption>
+                </figure>
+                <figure class="gallery-item gallery-item--mobile">
+                    <img src="assets/screenshots/painel-categoria-escuro-360.png" data-shot-light="assets/screenshots/login-escuro-360.png" data-shot-dark="assets/screenshots/painel-categoria-escuro-360.png" alt="Painel por categoria em tela estreita, modo escuro" loading="lazy">
+                    <figcaption>Celular (360px)</figcaption>
+                </figure>
+            </div>
+            <p class="gallery-note">As imagens acompanham o tema selecionado acima.</p>
+        </div>
+    </section>
+
+    <section id="instalacao" class="section">
+        <div class="wrap">
+            <h2>Requisitos e instalação</h2>
+            <div class="grid grid-2">
+                <div>
+                    <h3>Requisitos</h3>
+                    <ul class="check-list">
+                        <li>Moodle 4.5 LTS (tema filho do Boost)</li>
+                        <li>PHP 8.3</li>
+                        <li>Acesso de administrador para instalar plugins</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Instalação pelo pacote</h3>
+                    <ol class="step-list">
+                        <li>Baixe <code>theme_categoriaboard.zip</code> na <a href="https://github.com/shongasbarbosa/projeto-04-tema-moodle-categorias/releases/latest">release mais recente</a>.</li>
+                        <li>Em <strong>Administração do site → Plugins → Instalar plugins</strong>, envie o arquivo.</li>
+                        <li>Em <strong>Aparência → Temas → Seletor de temas</strong>, ative "Painel por Categoria".</li>
+                        <li>Em <strong>Aparência → Painel por Categoria</strong>, configure cor, logo e categorias.</li>
+                    </ol>
+                </div>
+            </div>
+            <p class="section-note">
+                Detalhes completos — incluindo o plugin opcional de dados de
+                demonstração e o ambiente Docker para rodar o projeto
+                localmente — estão no
+                <a href="https://github.com/shongasbarbosa/projeto-04-tema-moodle-categorias#readme">README do repositório</a>.
+            </p>
+        </div>
+    </section>
+
+    <section id="stack" class="section section-alt">
+        <div class="wrap">
+            <h2>Stack</h2>
+            <div class="grid grid-3">
+                <div class="stack-group">
+                    <h3>Moodle</h3>
+                    <p>4.5 LTS, PHP 8.3, PostgreSQL 16, Boost (Bootstrap 4.6.2)</p>
+                </div>
+                <div class="stack-group">
+                    <h3>Tema</h3>
+                    <p>SCSS, Mustache, JavaScript AMD, PHPUnit, moodle-plugin-ci</p>
+                </div>
+                <div class="stack-group">
+                    <h3>Infra e qualidade</h3>
+                    <p>Docker, GitHub Actions, Playwright + axe-core</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer class="site-footer">
+    <div class="wrap footer-inner">
+        <p>
+            <strong>Dhyego Barbosa</strong> —
+            <a href="https://github.com/shongasbarbosa">github.com/shongasbarbosa</a>
+        </p>
+        <p class="footer-links">
+            <a href="https://github.com/shongasbarbosa/projeto-04-tema-moodle-categorias">Repositório</a>
+            ·
+            <a href="https://github.com/shongasbarbosa/projeto-04-tema-moodle-categorias/releases">Releases</a>
+        </p>
+    </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
