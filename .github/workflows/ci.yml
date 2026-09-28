@@ -34,6 +34,7 @@ jobs:
     env:
       MOODLE_BRANCH: MOODLE_405_STABLE
       DB: pgsql
+      PLUGINS: "plugin/theme/categoriaboard plugin/local/categoriaboarddemo"
 
     steps:
       - name: Checkout do repositório
@@ -60,35 +61,38 @@ jobs:
           moodle-plugin-ci install \
             --plugin plugin/theme/categoriaboard \
             --plugin plugin/local/categoriaboarddemo \
-            --db-host=127.0.0.1
+            --db-host=127.0.0.1 \
+            --db-user=moodle \
+            --db-pass=moodle \
+            --db-name=moodle_test
 
       - name: PHP Lint
         if: ${{ !cancelled() }}
-        run: moodle-plugin-ci phplint plugin/theme/categoriaboard plugin/local/categoriaboarddemo
+        run: for p in $PLUGINS; do moodle-plugin-ci phplint "$p"; done
 
       - name: Moodle Code Checker (phpcs, padrão moodle)
         if: ${{ !cancelled() }}
-        run: moodle-plugin-ci phpcs plugin/theme/categoriaboard plugin/local/categoriaboarddemo
+        run: for p in $PLUGINS; do moodle-plugin-ci phpcs "$p"; done
 
       - name: Moodle PHPDoc Checker
         if: ${{ !cancelled() }}
-        run: moodle-plugin-ci phpdoc plugin/theme/categoriaboard plugin/local/categoriaboarddemo
+        run: for p in $PLUGINS; do moodle-plugin-ci phpdoc "$p"; done
 
       - name: Validate
         if: ${{ !cancelled() }}
-        run: moodle-plugin-ci validate plugin/theme/categoriaboard plugin/local/categoriaboarddemo
+        run: for p in $PLUGINS; do moodle-plugin-ci validate "$p"; done
 
       - name: Savepoints
         if: ${{ !cancelled() }}
-        run: moodle-plugin-ci savepoints plugin/theme/categoriaboard plugin/local/categoriaboarddemo
+        run: for p in $PLUGINS; do moodle-plugin-ci savepoints "$p"; done
 
       - name: Mustache Lint
         if: ${{ !cancelled() }}
-        run: moodle-plugin-ci mustache plugin/theme/categoriaboard plugin/local/categoriaboarddemo
+        run: for p in $PLUGINS; do moodle-plugin-ci mustache "$p"; done
 
       - name: Grunt (AMD + SCSS)
         if: ${{ !cancelled() }}
-        run: moodle-plugin-ci grunt --max-lint-warnings 0 plugin/theme/categoriaboard plugin/local/categoriaboarddemo
+        run: for p in $PLUGINS; do moodle-plugin-ci grunt --max-lint-warnings 0 "$p"; done
 
       - name: PHPUnit
         if: ${{ !cancelled() }}
