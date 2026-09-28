@@ -236,15 +236,13 @@ fora do escopo deste projeto (tema + plugin de seed).
 O SCSS declara `@font-face` para os pesos 400/500/600/700 usando o
 placeholder nativo do Moodle `[[font:theme_categoriaboard|arquivo.woff2]]`
 (resolvido automaticamente para a URL correta pelo pós-processamento de CSS
-do Moodle), com `fonts/LICENSE.txt` (SIL OFL 1.1) já no lugar.
-
-**Os arquivos binários `.woff2` não estão neste repositório.** Eles precisam
-ser copiados manualmente para `theme/categoriaboard/fonts/` com os nomes
-`GoogleSans-Regular.woff2`, `GoogleSans-Medium.woff2`,
-`GoogleSans-SemiBold.woff2`, `GoogleSans-Bold.woff2`. Até lá, o
-`font-family` cai no fallback do próprio `@font-face`
+do Moodle). Os arquivos `.woff2` (subset latin, extraídos do pacote
+[`@fontsource/google-sans`](https://www.npmjs.com/package/@fontsource/google-sans),
+SIL OFL 1.1) já estão versionados em `theme/categoriaboard/fonts/`, junto
+com `fonts/LICENSE.txt`. Se algum arquivo for removido, o `font-family` cai
+no fallback do próprio `@font-face`
 (`-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif`), então
-o tema funciona normalmente, só sem a fonte específica.
+o tema continua funcionando, só sem a fonte específica.
 
 ### Configurações do admin (`settings.php`)
 
@@ -586,9 +584,7 @@ instalado em qualquer Moodle 4.5 já existente:
    popular dados de demonstração.
 3. Em **Aparência → Temas → Seletor de temas**, ative "Painel por
    Categoria".
-4. Copie as fontes Google Sans para `theme/categoriaboard/fonts/` (ver
-   "Tipografia") — opcional, o tema funciona sem elas.
-5. Em **Aparência → Painel por Categoria**, configure cor primária, logo e
+4. Em **Aparência → Painel por Categoria**, configure cor primária, logo e
    cores por categoria.
 
 ## Como rodar o ambiente
