@@ -67,6 +67,17 @@ final class navigation_test extends \advanced_testcase {
         navigation::sync_custom_menu_item(true);
 
         $count = substr_count(get_config(null, 'custommenuitems'), navigation::MARKER);
-        $this->assertSame(1, $count);
+        $this->assertSame(count(navigation::LANGS), $count);
+    }
+
+    public function test_writes_one_line_per_language_with_translated_text(): void {
+        $this->resetAfterTest();
+        set_config('custommenuitems', '');
+
+        navigation::sync_custom_menu_item(true);
+        $menu = get_config(null, 'custommenuitems');
+
+        $this->assertStringContainsString('Meus cursos por categoria|' . navigation::MARKER . '||pt_br', $menu);
+        $this->assertStringContainsString('My courses by category|' . navigation::MARKER . '||en', $menu);
     }
 }

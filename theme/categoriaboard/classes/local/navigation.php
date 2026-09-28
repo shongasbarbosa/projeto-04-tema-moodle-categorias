@@ -37,9 +37,18 @@ class navigation {
     /** @var string Marks our own line so it can be found and replaced without touching others. */
     const MARKER = '/theme/categoriaboard/pages/painel.php';
 
+    /** @var string[] Languages the link is translated to, one custom menu line per language. */
+    const LANGS = ['pt_br', 'en'];
+
     /**
      * Adds our link to $CFG->custommenuitems, or removes it, without
      * touching any other line an admin may have added by hand.
+     *
+     * One line per language in {@see self::LANGS} is written, each with the
+     * fourth "langs" field of the custommenuitems format (see
+     * {@see \custom_menu_item} / {@see parse_custom_menu()}), so the link
+     * text follows the viewer's language instead of always showing in
+     * whichever language built the string first.
      *
      * @param bool $enabled
      */
@@ -47,10 +56,36 @@ class navigation {
         $lines = self::other_lines(get_config(null, 'custommenuitems') ?: '');
 
         if ($enabled) {
-            $lines[] = get_string('mycoursesbycategory', 'theme_categoriaboard') . '|' . self::MARKER;
+            foreach (self::LANGS as $lang) {
+                $lines[] = self::translated_text($lang) . '|' . self::MARKER . '||' . $lang;
+            }
         }
 
         set_config('custommenuitems', implode("\n", $lines));
+    }
+
+    /**
+     * Returns the "My courses by category" string in a specific language.
+     *
+     * Deliberately does not use {@see get_string()}'s `$lang` override
+     * (`get_string_manager()->get_string(..., $lang)`): that only resolves
+     * strings for a language whose *full* pack is installed site-wide
+     * (`$CFG->dataroot/lang/<lang>/langconfig.php`), otherwise Moodle's
+     * parent-language resolution silently falls back to English even for a
+     * string our own plugin ships. Reading `lang/<lang>/theme_categoriaboard.php`
+     * directly works on any install, with or without that langpack.
+     *
+     * @param string $lang
+     * @return string
+     */
+    private static function translated_text(string $lang): string {
+        $dir = \core_component::get_plugin_directory('theme', 'categoriaboard');
+        $file = "$dir/lang/$lang/theme_categoriaboard.php";
+        $string = [];
+        if (is_readable($file)) {
+            include($file);
+        }
+        return $string['mycoursesbycategory'] ?? get_string('mycoursesbycategory', 'theme_categoriaboard');
     }
 
     /**

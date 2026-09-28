@@ -657,12 +657,15 @@ body,
         border-color: var(--categoriaboard-border) !important;
     }
 
-    // Gray/white default buttons (secondary, outline, icon, light).
+    // Gray/white default buttons (secondary, outline, icon, light) and
+    // Bootstrap's pagination links (course list "Meus cursos" and other
+    // paginated lists), which ship with the same hardcoded white background.
     .btn-secondary,
     .btn-light,
     .btn-outline-secondary,
     .btn.icon-no-margin,
-    .btn-icon:not(.categoriaboard-themeswitcher-mobile__toggle) {
+    .btn-icon:not(.categoriaboard-themeswitcher-mobile__toggle),
+    .page-link {
         background-color: #2b323d !important;
         color: var(--categoriaboard-text) !important;
         border-color: #3a4351 !important;
@@ -672,6 +675,17 @@ body,
             background-color: #384150 !important;
             color: #ffffff !important;
         }
+    }
+
+    .page-item.active .page-link {
+        background-color: $primary !important;
+        border-color: $primary !important;
+        color: #ffffff !important;
+    }
+
+    .page-item.disabled .page-link {
+        background-color: #20262e !important;
+        color: #7a8290 !important;
     }
 
     // Light "success" (activity completion toggle) and light-blue helper
