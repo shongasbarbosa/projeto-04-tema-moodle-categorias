@@ -82,7 +82,7 @@ class colormap {
      * Returns the color configured for a category, or the default color.
      *
      * @param int $categoryid
-     * @param array<int, string> $map
+     * @param array $map Category id => "#rrggbb", as returned by {@see self::parse()}.
      * @return string
      */
     public static function color_for_category(int $categoryid, array $map): string {

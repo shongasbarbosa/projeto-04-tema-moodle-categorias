@@ -33,7 +33,6 @@ jobs:
     env:
       MOODLE_BRANCH: MOODLE_405_STABLE
       DB: pgsql
-      PLUGINS: "plugin/theme/categoriaboard plugin/local/categoriaboarddemo"
 
     steps:
       - name: Checkout do repositório
@@ -52,8 +51,8 @@ jobs:
       - name: Instalar moodle-plugin-ci
         run: |
           composer create-project -n --no-dev --prefer-dist moodlehq/moodle-plugin-ci ci ^4
-          echo "$(pwd)/ci/bin" >> $GITHUB_PATH
-          echo "$(pwd)/ci/vendor/bin" >> $GITHUB_PATH
+          echo "$(cd ci/bin; pwd)" >> $GITHUB_PATH
+          echo "$(cd ci/vendor/bin; pwd)" >> $GITHUB_PATH
 
       - name: Instalar o Moodle + plugins
         run: |
@@ -67,36 +66,45 @@ jobs:
 
       - name: PHP Lint
         if: ${{ !cancelled() }}
-        run: for p in $PLUGINS; do moodle-plugin-ci phplint "$p"; done
+        run: moodle-plugin-ci phplint
 
       - name: Moodle Code Checker (phpcs, padrão moodle)
         if: ${{ !cancelled() }}
-        run: for p in $PLUGINS; do moodle-plugin-ci phpcs "$p"; done
+        run: moodle-plugin-ci phpcs --max-warnings 0
 
       - name: Moodle PHPDoc Checker
         if: ${{ !cancelled() }}
-        run: for p in $PLUGINS; do moodle-plugin-ci phpdoc "$p"; done
+        run: moodle-plugin-ci phpdoc --max-warnings 0
 
       - name: Validate
         if: ${{ !cancelled() }}
-        run: for p in $PLUGINS; do moodle-plugin-ci validate "$p"; done
+        run: moodle-plugin-ci validate
 
       - name: Savepoints
         if: ${{ !cancelled() }}
-        run: for p in $PLUGINS; do moodle-plugin-ci savepoints "$p"; done
+        run: moodle-plugin-ci savepoints
 
       - name: Mustache Lint
         if: ${{ !cancelled() }}
-        run: for p in $PLUGINS; do moodle-plugin-ci mustache "$p"; done
+        run: moodle-plugin-ci mustache
 
       - name: Grunt (AMD + SCSS)
         if: ${{ !cancelled() }}
-        run: for p in $PLUGINS; do moodle-plugin-ci grunt --max-lint-warnings 0 "$p"; done
+        run: moodle-plugin-ci grunt --max-lint-warnings 0
 
       - name: PHPUnit
         if: ${{ !cancelled() }}
-        run: moodle-plugin-ci phpunit plugin/theme/categoriaboard
+        run: moodle-plugin-ci phpunit
 
       - name: Behat
         if: ${{ !cancelled() }}
-        run: moodle-plugin-ci behat --profile chrome plugin/theme/categoriaboard
+        run: moodle-plugin-ci behat --profile chrome
+
+      - name: Upload Behat Faildump
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: behat-faildump
+          path: ${{ github.workspace }}/moodledata/behat_dump
+          retention-days: 7
+          if-no-files-found: ignore
