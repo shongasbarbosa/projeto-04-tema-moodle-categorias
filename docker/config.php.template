@@ -1,0 +1,68 @@
+<?php  // Moodle configuration file
+//
+// Baseado no config.docker-template.php do moodlehq/moodle-docker, mas com
+// valores de desempenho de PRODUÇÃO em vez de desenvolvimento (ver README,
+// seção "Ambiente de demonstração como produção"). Copiado para dentro do
+// volume nomeado do Moodle por scripts/lib/core-volume.sh — não editar
+// diretamente dentro do container, pois um "reset" do volume descarta a
+// cópia.
+
+unset($CFG);
+global $CFG;
+$CFG = new stdClass();
+
+$CFG->dbtype    = getenv('MOODLE_DOCKER_DBTYPE');
+$CFG->dblibrary = 'native';
+$CFG->dbhost    = 'db';
+$CFG->dbname    = getenv('MOODLE_DOCKER_DBNAME');
+$CFG->dbuser    = getenv('MOODLE_DOCKER_DBUSER');
+$CFG->dbpass    = getenv('MOODLE_DOCKER_DBPASS');
+$CFG->prefix    = 'm_';
+$CFG->dboptions = ['dbcollation' => getenv('MOODLE_DOCKER_DBCOLLATION')];
+
+$host = getenv('MOODLE_DOCKER_WEB_HOST') ?: 'localhost';
+$CFG->wwwroot = "http://{$host}";
+$port = getenv('MOODLE_DOCKER_WEB_PORT');
+if (!empty($port)) {
+    $parts = explode(':', $port);
+    $port = end($parts);
+    if ((string) (int) $port === (string) $port) {
+        $CFG->wwwroot .= ":{$port}";
+    }
+}
+
+$CFG->dataroot  = '/var/www/moodledata';
+$CFG->admin     = 'admin';
+$CFG->directorypermissions = 0777;
+$CFG->smtphosts = 'mailpit:1025';
+$CFG->noreplyaddress = 'noreply@example.com';
+
+// --- Desempenho: ambiente de demonstração configurado como produção ---
+// Ver README, seção "Ambiente de demonstração como produção", para o que
+// cada linha resolve e como ligar o modo desenvolvedor temporariamente.
+$CFG->debug = 0;             // DEBUG_NONE. Era E_ALL (DEBUG_DEVELOPER) no template original.
+$CFG->debugdisplay = 0;      // Era 1. Elimina o rodapé de depuração.
+$CFG->debugstringids = 0;    // Era 1.
+$CFG->perfdebug = 0;         // Era 15. Para de coletar métricas de desempenho por página.
+$CFG->debugpageinfo = 0;     // Era 1.
+$CFG->allowthemechangeonurl = 1;
+$CFG->passwordpolicy = 0;
+$CFG->cronclionly = 0;
+$CFG->pathtophp = '/usr/local/bin/php';
+// themedesignermode, cachejs, cachetemplates e langstringcache não são
+// definidos aqui: por padrão (ausentes do config.php) o Moodle já usa os
+// valores de produção (cache ativado, sem recompilar SCSS/Mustache a cada
+// requisição). Só defina os overrides comentados abaixo para depurar o tema.
+//
+// Modo desenvolvedor (ative ao editar o tema, desative antes de medir desempenho):
+// $CFG->debug = 32767;            // DEBUG_DEVELOPER
+// $CFG->debugdisplay = 1;
+// $CFG->perfdebug = 15;
+// $CFG->themedesignermode = true; // NOT FOR PRODUCTION SERVERS!
+// $CFG->cachejs = false;          // NOT FOR PRODUCTION SERVERS!
+// $CFG->cachetemplates = false;   // NOT FOR PRODUCTION SERVERS!
+
+$CFG->phpunit_dataroot  = '/var/www/phpunitdata';
+$CFG->phpunit_prefix = 't_';
+
+require_once(__DIR__ . '/lib/setup.php'); // Do not edit.

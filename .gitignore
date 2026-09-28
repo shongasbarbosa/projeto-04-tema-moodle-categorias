@@ -1,0 +1,29 @@
+# Código-fonte do Moodle e da ferramenta moodle-docker: não versionados,
+# baixados pelos scripts em /scripts (ver README, seção "Ambiente Docker").
+/.moodle/
+/.moodle-docker/
+
+# Ambiente
+.env
+
+# Node (ferramentas de lint/build auxiliares, se usadas)
+node_modules/
+
+# Prints e relatório do npm run visual-check — só para revisão local, nunca publicado.
+/.visual/
+
+# PHP / Composer (dependências de dev do tema, se instaladas localmente)
+vendor/
+
+# Relatórios de teste
+phpunit.xml
+behat.yml
+
+# Pacotes gerados (.zip) para instalação manual — ver README, seção "Pacotes".
+/dist/
+
+# Editor / OS
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store

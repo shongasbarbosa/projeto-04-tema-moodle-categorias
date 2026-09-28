@@ -1,0 +1,29 @@
+# Local customisation para moodlehq/moodle-docker (ver seu README, seção
+# "Local customisations"). Copiado por scripts/lib/common.sh para
+# .moodle-docker/local.yml (gitignorado, regenerado a cada execução) antes
+# de toda chamada a bin/moodle-docker-compose.
+#
+# Duas responsabilidades:
+#
+# 1. Move o código do Moodle para um volume nomeado do Docker
+#    (`moodlecore`, criado e populado por scripts/lib/core-volume.sh),
+#    substituindo o bind mount padrão do moodle-docker
+#    (${MOODLE_DOCKER_WWWROOT}:/var/www/html, definido em base.yml) — o
+#    Compose mescla listas de "volumes" por "target", então declarar o
+#    mesmo target (/var/www/html) aqui SUBSTITUI a entrada do base.yml, em
+#    vez de duplicá-la. Ver README, seção "Desempenho: código do Moodle
+#    fora do bind mount do Windows".
+#
+# 2. Bind-mounta nosso tema e nosso plugin de seed dentro desse volume,
+#    para editá-los no repositório e ver o resultado sem rebuild.
+services:
+  webserver:
+    volumes:
+      - "moodlecore:/var/www/html"
+      - "${CATEGORIAB_THEME_DIR}:/var/www/html/theme/categoriaboard"
+      - "${CATEGORIAB_LOCAL_DIR}:/var/www/html/local/categoriaboarddemo"
+
+volumes:
+  moodlecore:
+    external: true
+    name: "${CATEGORIAB_CORE_VOLUME}"

@@ -1,0 +1,20 @@
+{
+  "name": "projeto-04-tema-moodle-categorias",
+  "private": true,
+  "description": "Painel do Aluno por Categoria — tema filho do Boost para Moodle 4.5 LTS.",
+  "scripts": {
+    "up": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/up.ps1",
+    "down": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/down.ps1",
+    "destroy": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/destroy.ps1",
+    "install:moodle": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/install.ps1",
+    "install:ci-tools": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/install-ci-tools.ps1",
+    "seed": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/seed.ps1",
+    "reset": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/reset.ps1",
+    "check": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check.ps1",
+    "visual-check": "node scripts/visual-check/run.mjs"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.10.0",
+    "playwright": "^1.48.0"
+  }
+}
