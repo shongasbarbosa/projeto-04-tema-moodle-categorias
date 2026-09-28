@@ -1,0 +1,99 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: moodle
+          POSTGRES_PASSWORD: moodle
+          POSTGRES_DB: moodle_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      selenium:
+        image: selenium/standalone-chrome:126.0
+        ports:
+          - 4444:4444
+
+    env:
+      MOODLE_BRANCH: MOODLE_405_STABLE
+      DB: pgsql
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+        with:
+          path: plugin
+
+      - name: Configurar PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: pgsql, pdo_pgsql, zip, gd, xmlrpc, soap, intl, mbstring
+          ini-values: max_input_vars=5000
+          coverage: none
+
+      - name: Instalar moodle-plugin-ci
+        run: |
+          composer create-project -n --no-dev --prefer-dist moodlehq/moodle-plugin-ci ci ^4
+          echo "$(pwd)/ci/bin" >> $GITHUB_PATH
+          echo "$(pwd)/ci/vendor/bin" >> $GITHUB_PATH
+
+      - name: Instalar o Moodle + plugins
+        run: |
+          moodle-plugin-ci install \
+            --plugin plugin/theme/categoriaboard \
+            --plugin plugin/local/categoriaboarddemo \
+            --db-host=127.0.0.1
+
+      - name: PHP Lint
+        if: ${{ !cancelled() }}
+        run: moodle-plugin-ci phplint plugin/theme/categoriaboard plugin/local/categoriaboarddemo
+
+      - name: Moodle Code Checker (phpcs, padrão moodle)
+        if: ${{ !cancelled() }}
+        run: moodle-plugin-ci phpcs plugin/theme/categoriaboard plugin/local/categoriaboarddemo
+
+      - name: Moodle PHPDoc Checker
+        if: ${{ !cancelled() }}
+        run: moodle-plugin-ci phpdoc plugin/theme/categoriaboard plugin/local/categoriaboarddemo
+
+      - name: Validate
+        if: ${{ !cancelled() }}
+        run: moodle-plugin-ci validate plugin/theme/categoriaboard plugin/local/categoriaboarddemo
+
+      - name: Savepoints
+        if: ${{ !cancelled() }}
+        run: moodle-plugin-ci savepoints plugin/theme/categoriaboard plugin/local/categoriaboarddemo
+
+      - name: Mustache Lint
+        if: ${{ !cancelled() }}
+        run: moodle-plugin-ci mustache plugin/theme/categoriaboard plugin/local/categoriaboarddemo
+
+      - name: Grunt (AMD + SCSS)
+        if: ${{ !cancelled() }}
+        run: moodle-plugin-ci grunt --max-lint-warnings 0 plugin/theme/categoriaboard plugin/local/categoriaboarddemo
+
+      - name: PHPUnit
+        if: ${{ !cancelled() }}
+        run: moodle-plugin-ci phpunit plugin/theme/categoriaboard
+
+      - name: Behat
+        if: ${{ !cancelled() }}
+        run: moodle-plugin-ci behat --profile chrome plugin/theme/categoriaboard
