@@ -1,0 +1,981 @@
+// Category board — component styles, design tokens, login/header overrides
+// and the light/dark/system theme switcher.
+//
+// Variables such as $primary and the categoriaboard-* tokens are defined in
+// theme_categoriaboard_get_pre_scss() (see lib.php) from the admin settings,
+// so they are available here before this file is compiled.
+
+// -----------------------------------------------------------------------
+// Fonts: Google Sans (SIL OFL), self-hosted under theme/categoriaboard/fonts.
+// See fonts/LICENSE.txt. Falls back to the system UI font stack when the
+// binaries are not present, so the theme still renders correctly.
+// -----------------------------------------------------------------------
+@font-face {
+    font-family: 'Google Sans';
+    src: url('[[font:theme_categoriaboard|GoogleSans-Regular.woff2]]') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Google Sans';
+    src: url('[[font:theme_categoriaboard|GoogleSans-Medium.woff2]]') format('woff2');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Google Sans';
+    src: url('[[font:theme_categoriaboard|GoogleSans-SemiBold.woff2]]') format('woff2');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Google Sans';
+    src: url('[[font:theme_categoriaboard|GoogleSans-Bold.woff2]]') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+:root {
+    --categoriaboard-bg: #{$categoriaboard-surface};
+    --categoriaboard-surface: #ffffff;
+    --categoriaboard-text: #1b1f27;
+    --categoriaboard-text-muted: #5b6472;
+    --categoriaboard-border: #e2e5eb;
+    --categoriaboard-shadow: #{$categoriaboard-shadow-sm};
+}
+
+[data-categoriaboard-theme='dark'] {
+    --categoriaboard-bg: #{$categoriaboard-surface-dark};
+    --categoriaboard-surface: #1a1f27;
+    --categoriaboard-text: #f3f5f8;
+    --categoriaboard-text-muted: #b6bdc9;
+    --categoriaboard-border: #2b323d;
+    --categoriaboard-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+body {
+    font-family: 'Google Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+// -----------------------------------------------------------------------
+// Dark mode across the Bootstrap 4 surfaces Boost actually uses in this
+// environment (Bootstrap 4 has no CSS-variable-driven theming of its own,
+// so each component below is re-themed explicitly rather than inheriting
+// from a couple of root variables). `!important` is used only where Boost
+// hardcodes a color via a utility class (e.g. `.bg-white`), which would
+// otherwise win over a plain override by specificity/source order.
+// -----------------------------------------------------------------------
+body,
+[data-categoriaboard-theme='dark'] {
+    background-color: var(--categoriaboard-bg);
+    color: var(--categoriaboard-text);
+}
+
+[data-categoriaboard-theme='dark'] {
+    // Header / primary navigation / drawers.
+    .navbar,
+    .navbar.bg-white,
+    #page-navbar,
+    .drawer,
+    .drawercontent,
+    .list-group-item.drawer-item {
+        background-color: var(--categoriaboard-surface) !important;
+        color: var(--categoriaboard-text);
+        border-color: var(--categoriaboard-border);
+    }
+
+    .navbar-light .navbar-brand,
+    .navbar-light .navbar-nav .nav-link,
+    .navbar-light .navbar-toggler,
+    .drawer .drawer-title,
+    .drawer a,
+    #usernavigation,
+    .primary-navigation .nav-link {
+        color: var(--categoriaboard-text) !important;
+    }
+
+    .primary-navigation .nav-link.active,
+    .drawer a.list-group-item.active {
+        color: #ffffff !important;
+        background-color: var(--categoriaboard-category-color, #{$primary}) !important;
+    }
+
+    .divider.border-start {
+        border-color: var(--categoriaboard-border) !important;
+    }
+
+    // Cards (course listing cards, dashboard, category board, etc).
+    .card,
+    .card-body,
+    .card-header,
+    .card-footer {
+        background-color: var(--categoriaboard-surface);
+        color: var(--categoriaboard-text);
+        border-color: var(--categoriaboard-border);
+    }
+
+    .text-muted,
+    .text-body-secondary,
+    small.text-muted,
+    .form-shortname,
+    .form-defaultinfo {
+        color: var(--categoriaboard-text-muted) !important;
+    }
+
+    // Page header ("Painel", "Meus cursos", course title, etc). Boost paints
+    // this wrapper with an explicit white background regardless of body —
+    // confirmed by axe reporting a literal #ffffff behind the heading text.
+    #page-header,
+    .page-header-headings,
+    .page-context-header {
+        background-color: var(--categoriaboard-bg);
+        color: var(--categoriaboard-text);
+    }
+
+    // Any Bootstrap utility background class used on a container we haven't
+    // named individually (participant filters, table wrappers, etc).
+    .bg-white,
+    .bg-light {
+        background-color: var(--categoriaboard-surface) !important;
+        color: var(--categoriaboard-text);
+    }
+
+    // Secondary/tertiary navigation tabs (course "Participants / Grades /
+    // Competencies" bar, admin/search.php's category tabs) — a component
+    // separate from primary-navigation, with its own white background.
+    .secondary-navigation,
+    .tertiary-navigation,
+    .nav-tabs,
+    [id$="-nav-tabs"] {
+        background-color: var(--categoriaboard-surface);
+        border-color: var(--categoriaboard-border);
+    }
+
+    .nav-link {
+        color: var(--categoriaboard-text) !important;
+    }
+
+    // Bootstrap's .nav-tabs .nav-link (active or not) hardcodes a white
+    // background of its own, more specific than the plain .nav-tabs rule
+    // above — transparent lets the dark .nav-tabs background show through.
+    .nav-tabs .nav-link {
+        background-color: transparent !important;
+    }
+
+    .nav-tabs .nav-link.active {
+        background-color: var(--categoriaboard-surface) !important;
+        border-color: var(--categoriaboard-border) !important;
+    }
+
+    // Section/heading links (course section titles, etc) — Boost hardcodes
+    // a near-black color here that our generic `a` rule below doesn't win
+    // against due to selector specificity.
+    h1 a, h2 a, h3 a, h4 a, h5 a, h6 a,
+    .h1 a, .h2 a, .h3 a, .h4 a, .h5 a, .h6 a {
+        color: var(--categoriaboard-text) !important;
+    }
+
+    // Popovers (notifications, message drawer previews, etc). Individual
+    // notification items and the "show all" footer are separate elements
+    // with their own background, not covered by .popover/.popover-body.
+    .popover,
+    .popover-body,
+    .popover-region-container,
+    [data-region^="popover-region"],
+    [data-region^="popover-region"] [data-region],
+    .popover-region-content-item-container,
+    .popover-region-footer-container {
+        background-color: var(--categoriaboard-surface);
+        color: var(--categoriaboard-text);
+        border-color: var(--categoriaboard-border);
+    }
+
+    .popover-region-header-text,
+    .popover-region-seeall-text,
+    .empty-message {
+        color: var(--categoriaboard-text) !important;
+    }
+
+    // Select-style buttons (grade report's "View" dropdown, etc): plain
+    // .btn.dropdown-toggle without a semantic colour keeps Bootstrap's
+    // default near-black text, illegible once the surface behind it is dark.
+    .btn.dropdown-toggle:not(.btn-primary):not(.btn-danger):not(.btn-success):not(.btn-warning):not(.btn-info) {
+        color: var(--categoriaboard-text);
+        background-color: var(--categoriaboard-surface);
+        border-color: var(--categoriaboard-border);
+    }
+
+    [role="combobox"] {
+        color: var(--categoriaboard-text);
+    }
+
+    // Course listing boxes: a pre-Bootstrap-card component
+    // (course/renderer.php's coursecat_coursebox()) still used on the site
+    // front page ("Available courses") and category browsing pages. It has
+    // no background of its own in Boost's SCSS, so it was rendering as a
+    // transparent box over a light ancestor — explicit colors here fix it
+    // regardless of what that ancestor turns out to be.
+    .coursebox,
+    .generalbox,
+    .box,
+    #region-main {
+        background-color: var(--categoriaboard-surface);
+        color: var(--categoriaboard-text);
+        border-color: var(--categoriaboard-border);
+    }
+
+    // Boost's own generic styles set this wrapper's background after ours
+    // in source order, so plain background-color loses; !important wins.
+    .main-inner {
+        background-color: var(--categoriaboard-surface) !important;
+        color: var(--categoriaboard-text);
+    }
+
+    .coursebox .moreinfo,
+    .coursebox .font-weight-bold {
+        color: var(--categoriaboard-text) !important;
+    }
+
+    // Report/gradebook wrappers and .generaltable (a table component that
+    // predates Bootstrap's .table class and isn't covered by it) hardcode a
+    // light gray background of their own.
+    .user-report-container,
+    .activity-header,
+    .generaltable th,
+    .generaltable td,
+    .generaltable tr {
+        background-color: var(--categoriaboard-surface) !important;
+        color: var(--categoriaboard-text);
+        border-color: var(--categoriaboard-border);
+    }
+
+    // List groups (activity lists, settings navigation, etc).
+    .list-group-item {
+        background-color: var(--categoriaboard-surface);
+        color: var(--categoriaboard-text);
+        border-color: var(--categoriaboard-border);
+    }
+
+    // Forms and inputs.
+    .form-control,
+    select.form-control,
+    textarea.form-control,
+    .custom-select,
+    .input-group-text {
+        background-color: var(--categoriaboard-surface);
+        color: var(--categoriaboard-text);
+        border-color: var(--categoriaboard-border);
+    }
+
+    .form-control::placeholder {
+        color: var(--categoriaboard-text-muted);
+    }
+
+    label,
+    .form-check-label,
+    legend {
+        color: var(--categoriaboard-text);
+    }
+
+    // Dropdowns.
+    .dropdown-menu {
+        background-color: var(--categoriaboard-surface);
+        color: var(--categoriaboard-text);
+        border-color: var(--categoriaboard-border);
+    }
+
+    .dropdown-item {
+        color: var(--categoriaboard-text);
+
+        &:hover,
+        &:focus {
+            background-color: var(--categoriaboard-bg);
+            color: var(--categoriaboard-text);
+        }
+    }
+
+    .dropdown-divider {
+        border-color: var(--categoriaboard-border);
+    }
+
+    // Modals.
+    .modal-content,
+    .modal-header,
+    .modal-footer {
+        background-color: var(--categoriaboard-surface);
+        color: var(--categoriaboard-text);
+        border-color: var(--categoriaboard-border);
+    }
+
+    .modal-backdrop {
+        opacity: 0.7;
+    }
+
+    // Tables.
+    .table,
+    .generaltable,
+    .flexible {
+        background-color: var(--categoriaboard-surface);
+        color: var(--categoriaboard-text);
+    }
+
+    .table th,
+    .table td,
+    .table tr {
+        border-color: var(--categoriaboard-border);
+        background-color: var(--categoriaboard-surface);
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: var(--categoriaboard-bg);
+        color: var(--categoriaboard-text);
+    }
+
+    // Alerts (keep semantic hue, darken background for contrast).
+    .alert-info { background-color: #0c3a52; color: #d7ecf7; border-color: #0f4a68; }
+    .alert-success { background-color: #123a24; color: #d3f0dd; border-color: #185432; }
+    .alert-warning { background-color: #4a3a0c; color: #fbeecb; border-color: #5c4810; }
+    .alert-danger { background-color: #4a1420; color: #f8d7da; border-color: #611a2a; }
+
+    // Buttons, including outline variants (Bootstrap 4 outline buttons use
+    // the semantic color as their text/border, which reads fine on our dark
+    // surface already; only the default light "secondary" text needs help).
+    .btn-outline-secondary {
+        color: var(--categoriaboard-text);
+        border-color: var(--categoriaboard-border);
+
+        &:hover {
+            color: var(--categoriaboard-bg);
+            background-color: var(--categoriaboard-text);
+        }
+    }
+
+    .btn-link {
+        color: lighten($primary, 18%);
+    }
+
+    // Footer.
+    #page-footer,
+    .footer-content-container {
+        background-color: var(--categoriaboard-surface);
+        color: var(--categoriaboard-text-muted);
+        border-color: var(--categoriaboard-border);
+    }
+
+    // Login page. The card itself (title + form) kept Bootstrap's default
+    // white card background/near-black border even though the page behind
+    // it went dark — only the outer wrapper was covered before, not the
+    // card, so the title read as dark text on a still-white card with a
+    // light border ring around it.
+    #page-login-index,
+    .login-wrapper,
+    .login-container .card {
+        background-color: var(--categoriaboard-bg);
+    }
+
+    .login-container .card,
+    .login-container .card-body {
+        background-color: var(--categoriaboard-surface) !important;
+        color: var(--categoriaboard-text);
+        border-color: var(--categoriaboard-border) !important;
+    }
+
+    .login-container .card h1,
+    .login-container .card h2,
+    .login-container .card .login-heading {
+        color: var(--categoriaboard-text) !important;
+    }
+
+    // Links: lighten the primary color for AA contrast on a dark surface.
+    // 15% measured at 4.48:1 against our surface color — just under the
+    // 4.5:1 AA threshold for normal text, confirmed by axe. 22% clears it
+    // with margin.
+    a {
+        color: lighten($primary, 22%);
+
+        &:hover {
+            color: lighten($primary, 32%);
+        }
+    }
+
+    // Breadcrumbs / secondary text used across course, activity and admin pages.
+    .breadcrumb-item,
+    .breadcrumb-item.active,
+    .text-body {
+        color: var(--categoriaboard-text) !important;
+    }
+
+    // -------------------------------------------------------------------
+    // Issues below don't trip axe's color-contrast rule (a light block with
+    // dark text on it, or a light block with barely-legible light text, can
+    // both pass a same-element contrast check while still visually clashing
+    // against the dark page around it) — found by manual review instead,
+    // and re-checked with the visual-check script's own luminance scan.
+    // -------------------------------------------------------------------
+
+    // Course "Participants / Grades / Competencies" tab bar: the row that
+    // wraps .nav-tabs paints its own white background on both sides of the
+    // tab list (the "more" overflow toggle and the row gutters), not just
+    // behind the tabs themselves.
+    .tertiary-navigation,
+    .tertiary-navigation .row,
+    .tertiary-navigation .full-width-bg,
+    .course-content-header,
+    #page-header .card {
+        background-color: var(--categoriaboard-surface) !important;
+    }
+
+    .nav-tabs .dropdown-toggle,
+    .nav-tabs .dropdown-menu {
+        background-color: var(--categoriaboard-surface) !important;
+        color: var(--categoriaboard-text) !important;
+        border-color: var(--categoriaboard-border) !important;
+    }
+
+    // Course header and the card immediately below it used two different
+    // dark tones (--categoriaboard-bg for the header, --categoriaboard-surface
+    // for the card) which read as a visible seam even though both passed
+    // contrast on their own — align the header to the same surface tone.
+    #page-header,
+    .page-context-header {
+        background-color: var(--categoriaboard-surface) !important;
+    }
+
+    // Primary navigation's active item ("Página inicial", etc): falls back
+    // to plain $primary when --categoriaboard-category-color isn't set on
+    // this page (front page, admin pages), which on some configured
+    // category color palettes stays too close to white; force it via the
+    // theme's actual dark surface behind the pill instead of relying on the
+    // fallback color's own contrast.
+    .primary-navigation .nav-link.active,
+    .primary-navigation li.nav-item.active > .nav-link {
+        background-color: var(--categoriaboard-category-color, #{darken($primary, 10%)}) !important;
+        color: #ffffff !important;
+    }
+
+    // Edit-mode "Add a block" button and the block-region cards around it.
+    .addblockbutton,
+    .block-region-container .card,
+    .block-region-container .card-body,
+    .block .card,
+    .block .card-body {
+        background-color: var(--categoriaboard-surface) !important;
+        color: var(--categoriaboard-text) !important;
+        border-color: var(--categoriaboard-border) !important;
+    }
+
+    // Comments block (course page, activity pages): comment box and each
+    // existing comment row hardcode a white background.
+    .comment-area,
+    .comment-area .comment-ctrl,
+    .comment-area textarea,
+    .comment-message-box,
+    .comment-area .comments-list,
+    .comment-area .comment-message {
+        background-color: var(--categoriaboard-surface) !important;
+        color: var(--categoriaboard-text) !important;
+        border-color: var(--categoriaboard-border) !important;
+    }
+
+    // Message drawer (contacts list, conversation view, message bubbles).
+    .message-app,
+    .message-app__conversation-header,
+    .message-app__conversation-messages,
+    .message-app__contacts,
+    [data-region="message-drawer"],
+    [data-region="view-overview-messages"],
+    [data-region="view-conversation"],
+    .contacts-list,
+    .messages-list {
+        background-color: var(--categoriaboard-surface) !important;
+        color: var(--categoriaboard-text) !important;
+    }
+
+    .message-app .list-group-item,
+    [data-region="message-drawer"] .list-group-item {
+        background-color: var(--categoriaboard-surface) !important;
+        color: var(--categoriaboard-text) !important;
+        border-color: var(--categoriaboard-border) !important;
+    }
+
+    .message-app .text-truncate,
+    .message-app small,
+    [data-region="message-drawer"] small {
+        color: var(--categoriaboard-text-muted) !important;
+    }
+
+    // Messages sent by "me" keep the primary-colored bubble (legible white
+    // text already); messages from others use a light gray bubble that
+    // needs the same dark-surface treatment as everything else.
+    .message.message-in,
+    .bg-light.message {
+        background-color: var(--categoriaboard-surface) !important;
+        color: var(--categoriaboard-text) !important;
+    }
+
+    // Notifications page (/message/output/popup/notifications.php): the
+    // left-hand notification list rows keep a white row background.
+    [data-region="notification-list-area"],
+    .notifications-list,
+    .notification-item,
+    .notification-content {
+        background-color: var(--categoriaboard-surface) !important;
+        color: var(--categoriaboard-text) !important;
+        border-color: var(--categoriaboard-border) !important;
+    }
+
+    // -------------------------------------------------------------------
+    // YUI file picker (/user/files.php "Add..." button, the "Seletor de
+    // arquivos" modal). This predates Bootstrap entirely — it's YUI's own
+    // moodle-dialogue widget plus the file-picker module's own markup
+    // (.fp-*), none of which is touched by any Bootstrap override above.
+    // -------------------------------------------------------------------
+    .moodle-dialogue-base .moodle-dialogue,
+    .moodle-dialogue-base .moodle-dialogue-wrap,
+    .moodle-dialogue-base .moodle-dialogue-hd,
+    .moodle-dialogue-base .moodle-dialogue-bd,
+    .moodle-dialogue-base .moodle-dialogue-content,
+    .file-picker,
+    .filepicker-filelist,
+    .fp-content,
+    .fp-repo,
+    .fp-repo-items,
+    .fp-list,
+    .fp-panel,
+    .fp-toolbar {
+        background-color: var(--categoriaboard-surface) !important;
+        color: var(--categoriaboard-text) !important;
+        border-color: var(--categoriaboard-border) !important;
+    }
+
+    .fp-repo-area .fp-repo,
+    .fp-repo-area a {
+        color: var(--categoriaboard-text) !important;
+    }
+
+    .fp-repo-area .fp-repo.active,
+    .fp-repo-area .fp-repo:hover {
+        background-color: var(--categoriaboard-bg) !important;
+    }
+
+    .fp-msg,
+    .fp-emptylist,
+    .filemanager-container .fp-content {
+        color: var(--categoriaboard-text-muted) !important;
+    }
+
+    // -------------------------------------------------------------------
+    // TinyMCE 6 (editor_tiny). The toolbar/menu chrome lives in the normal
+    // DOM (tox- classes) and is unaffected by Bootstrap, so it needs the
+    // same explicit treatment as the YUI dialogue above. The editable
+    // content itself lives inside a same-origin iframe with its own
+    // stylesheet and is intentionally left white (it's a WYSIWYG preview of
+    // the actual saved HTML, which is rendered on normal light-background
+    // pages elsewhere on the site) — only the chrome around it is retheme.
+    // -------------------------------------------------------------------
+    .tox-tinymce,
+    .tox .tox-toolbar,
+    .tox .tox-toolbar__primary,
+    .tox .tox-toolbar-overlord,
+    .tox .tox-menubar,
+    .tox .tox-statusbar {
+        background-color: var(--categoriaboard-surface) !important;
+        border-color: var(--categoriaboard-border) !important;
+    }
+
+    .tox .tox-tbtn,
+    .tox .tox-mbtn,
+    .tox .tox-statusbar a,
+    .tox .tox-statusbar__path-item {
+        color: var(--categoriaboard-text) !important;
+    }
+
+    .tox .tox-tbtn svg,
+    .tox .tox-mbtn svg {
+        fill: var(--categoriaboard-text) !important;
+    }
+
+    .tox .tox-menu,
+    .tox .tox-collection__group {
+        background-color: var(--categoriaboard-surface) !important;
+        border-color: var(--categoriaboard-border) !important;
+    }
+
+    .tox .tox-collection__item {
+        color: var(--categoriaboard-text) !important;
+    }
+
+    .tox .tox-collection__item--active,
+    .tox .tox-tbtn--enabled {
+        background-color: var(--categoriaboard-bg) !important;
+    }
+
+    // Date selector (mod/quiz deadlines, activity edit form "Available
+    // from", etc): a form-group of plain <select> elements, already
+    // day/month/year color-corrected by .form-control/.custom-select above
+    // in the common case, but Moodle renders this one without either class
+    // on some templates.
+    .fdate_selector select,
+    .fdate_time_selector select {
+        background-color: var(--categoriaboard-surface) !important;
+        color: var(--categoriaboard-text) !important;
+        border-color: var(--categoriaboard-border) !important;
+    }
+
+    // -------------------------------------------------------------------
+    // Round 2, driven by the light-block detector's first run. These
+    // components' colors are set directly on the elements themselves
+    // (Bootstrap 4.6.2, as vendored by theme_boost — some of its utility
+    // classes were renamed to Bootstrap 5's logical-property convention,
+    // e.g. ms-/me-/text-end instead of ml-/mr-/text-right, without an
+    // actual Bootstrap major-version upgrade), so each needs an explicit
+    // override rather than a single shared variable.
+    // -------------------------------------------------------------------
+
+    // Login card container, inputs and footer kept white.
+    .login-container,
+    #page-footer.bg-white,
+    footer.bg-white {
+        background-color: var(--categoriaboard-surface) !important;
+        color: var(--categoriaboard-text) !important;
+        border-color: var(--categoriaboard-border) !important;
+    }
+
+    .form-control,
+    .form-select,
+    input.form-control-lg,
+    .login-container input {
+        background-color: var(--categoriaboard-bg) !important;
+        color: var(--categoriaboard-text) !important;
+        border-color: var(--categoriaboard-border) !important;
+    }
+
+    // Gray/white default buttons (secondary, outline, icon, light).
+    .btn-secondary,
+    .btn-light,
+    .btn-outline-secondary,
+    .btn.icon-no-margin,
+    .btn-icon:not(.categoriaboard-themeswitcher-mobile__toggle) {
+        background-color: #2b323d !important;
+        color: var(--categoriaboard-text) !important;
+        border-color: #3a4351 !important;
+
+        &:hover,
+        &:focus {
+            background-color: #384150 !important;
+            color: #ffffff !important;
+        }
+    }
+
+    // Light "success" (activity completion toggle) and light-blue helper
+    // buttons ("Add a block", "Add an activity or resource", "Add section").
+    .btn-success.btn-sm,
+    .btn-outline-success {
+        background-color: #1e5a34 !important;
+        color: #ffffff !important;
+        border-color: #2a7a48 !important;
+    }
+
+    .block-add,
+    .section-modchooser,
+    .section-modchooser-link,
+    .add-section,
+    .bulkEnable,
+    .btn-link.text-primary {
+        background-color: #232b3f !important;
+        color: lighten($primary, 24%) !important;
+        border-color: #33405e !important;
+    }
+
+    .text-primary,
+    .text-primary a {
+        color: lighten($primary, 24%) !important;
+    }
+
+    .text-danger,
+    .text-danger .menu-action-text {
+        color: #ff8f99 !important;
+    }
+
+    .groupmode-icon-info,
+    .message-app .day,
+    .message-app .time,
+    [data-region="time-created"],
+    h6.day {
+        color: var(--categoriaboard-text) !important;
+    }
+
+    // Conversation rows in the message drawer.
+    .message.clickable,
+    [data-region="message-drawer"] .message {
+        background-color: var(--categoriaboard-surface) !important;
+        color: var(--categoriaboard-text) !important;
+    }
+
+    // Course tab bar's overflow ("more") wrapper.
+    nav.moremenu,
+    .moremenu,
+    .moremenu .nav,
+    .moremenu .nav-item {
+        background-color: var(--categoriaboard-surface) !important;
+        border-color: var(--categoriaboard-border) !important;
+    }
+
+    // File picker sidebar (repository list) and its links.
+    .fp-repo-area,
+    .fp-repo-area .nav,
+    .fp-repo-area .nav-item,
+    .fp-repo-area .nav-link {
+        background-color: var(--categoriaboard-surface) !important;
+        color: var(--categoriaboard-text) !important;
+        border-color: var(--categoriaboard-border) !important;
+    }
+
+    .fp-repo-area .fp-repo-name,
+    .fp-repo-area .nav-link.active .fp-repo-name {
+        color: var(--categoriaboard-text) !important;
+    }
+
+    // TinyMCE header wrapper, menu-bar buttons and word count.
+    .tox .tox-editor-header,
+    .tox .tox-mbtn,
+    .tox .tox-mbtn--select,
+    .tox .tox-statusbar__wordcount,
+    .tox .tox-statusbar__path,
+    .tox .tox-statusbar__branding {
+        background-color: var(--categoriaboard-surface) !important;
+        color: var(--categoriaboard-text) !important;
+        border-color: var(--categoriaboard-border) !important;
+    }
+
+    .tox .tox-mbtn__select-label {
+        color: var(--categoriaboard-text) !important;
+    }
+
+    // Confirmation modals (e.g. "Delete this activity?") reuse .modal-content
+    // above, but the message body text and the muted helper text under it
+    // used to inherit Bootstrap's near-black default instead of our token.
+    .modal-body,
+    .modal-body p {
+        color: var(--categoriaboard-text) !important;
+    }
+}
+
+// -----------------------------------------------------------------------
+// Category board
+// -----------------------------------------------------------------------
+.categoriaboard-board {
+    margin-block: 1.5rem;
+}
+
+.categoriaboard-empty {
+    padding: 1.5rem;
+    border-radius: $categoriaboard-radius-md;
+    background: var(--categoriaboard-surface);
+    border: 1px dashed var(--categoriaboard-border);
+    color: var(--categoriaboard-text-muted);
+
+    &--category {
+        padding: 0.75rem 1rem;
+        border-style: solid;
+    }
+}
+
+.categoriaboard-category {
+    margin-bottom: 2rem;
+
+    &__title {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-left: 4px solid var(--categoriaboard-category-color, #{$primary});
+        padding-left: 0.75rem;
+        margin-bottom: 0.75rem;
+    }
+
+    &__swatch {
+        display: inline-block;
+        width: 0.75rem;
+        height: 0.75rem;
+        border-radius: 50%;
+        background-color: var(--categoriaboard-category-color, #{$primary});
+    }
+
+    &__count {
+        font-weight: 400;
+        color: var(--categoriaboard-text-muted);
+        font-size: 0.9rem;
+    }
+}
+
+.categoriaboard-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.categoriaboard-card {
+    background: var(--categoriaboard-surface);
+    border: 1px solid var(--categoriaboard-border);
+    border-radius: $categoriaboard-radius-md;
+    box-shadow: var(--categoriaboard-shadow);
+    overflow: hidden;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+    &:hover,
+    &:focus-within {
+        transform: translateY(-2px);
+        box-shadow: $categoriaboard-shadow-md;
+    }
+
+    &__link {
+        display: block;
+        color: inherit;
+        text-decoration: none;
+
+        &:hover,
+        &:focus {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        &:focus-visible {
+            outline: 3px solid var(--categoriaboard-category-color, #{$primary});
+            outline-offset: -3px;
+        }
+    }
+
+    &__image {
+        display: block;
+        height: 110px;
+        background-size: cover;
+        background-position: center;
+        background-color: var(--categoriaboard-border);
+    }
+
+    &__body {
+        display: block;
+        padding: 0.75rem 1rem 1rem;
+    }
+
+    &__title {
+        display: block;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+}
+
+.categoriaboard-progress {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    &--none {
+        color: var(--categoriaboard-text-muted);
+        font-size: 0.85rem;
+    }
+
+    &__bar {
+        flex: 1;
+        display: block;
+        height: 8px;
+        border-radius: $categoriaboard-radius-sm;
+        background: var(--categoriaboard-border);
+        overflow: hidden;
+    }
+
+    &__fill {
+        display: block;
+        height: 100%;
+        background-color: var(--categoriaboard-category-color, #{$primary});
+    }
+
+    &__label {
+        font-size: 0.85rem;
+        color: var(--categoriaboard-text-muted);
+        min-width: 2.5rem;
+        text-align: right;
+    }
+}
+
+// -----------------------------------------------------------------------
+// Login page and header
+// -----------------------------------------------------------------------
+#page-login-index,
+.path-login {
+    background-color: var(--categoriaboard-bg);
+
+    .login-logo img {
+        max-height: 64px;
+    }
+}
+
+.categoriaboard-header-logo img {
+    max-height: 40px;
+}
+
+// -----------------------------------------------------------------------
+// Theme switcher (Sistema / Claro / Escuro)
+// -----------------------------------------------------------------------
+.categoriaboard-themeswitcher {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+
+    &__button {
+        background: transparent;
+        border: 1px solid var(--categoriaboard-border);
+        border-radius: $categoriaboard-radius-sm;
+        color: inherit;
+        padding: 0.25rem 0.5rem;
+
+        &[aria-pressed='true'] {
+            background-color: var(--categoriaboard-category-color, #{$primary});
+            color: #ffffff;
+            border-color: transparent;
+        }
+
+        &:focus-visible {
+            outline: 3px solid var(--categoriaboard-category-color, #{$primary});
+            outline-offset: 2px;
+        }
+    }
+}
+
+.categoriaboard-themeswitcher-mobile {
+    &__toggle {
+        background: transparent;
+        border: 1px solid transparent;
+        border-radius: $categoriaboard-radius-sm;
+        color: inherit;
+        width: 2.25rem;
+        height: 2.25rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        &:focus-visible,
+        &[aria-expanded='true'] {
+            border-color: var(--categoriaboard-border);
+            outline: 3px solid var(--categoriaboard-category-color, #{$primary});
+            outline-offset: 2px;
+        }
+    }
+
+    .dropdown-item[aria-pressed='true'] {
+        font-weight: 600;
+        color: var(--categoriaboard-category-color, #{$primary});
+    }
+}
